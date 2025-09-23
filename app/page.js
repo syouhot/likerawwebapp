@@ -5,19 +5,19 @@ import abiData from './utils/abi.json';
 import { useStateContext } from './context';
 import { checkIfImage } from './utils';
 import { parseUnits } from 'viem';
-import { useWaitForTransactionReceipt } from 'wagmi';
-
+import { useAllPropertiesFunction } from "@/app/context/readHook"
 const styles = {
   header: "flex flex-row gap-4",
   button: "bg-blue-500 p-2 rounded-md text-white font-bold cursor-pointer"
 }
 export default function Home() {
+  const { properties } = useAllPropertiesFunction()
   const { address, isConnected } = useAccount()
   const { connectors, connect } = useConnect();
-  const { data:hash, writeContract, status,isPending } = useWriteContract()
+  // const { data: hash, writeContract, status, isPending } = useWriteContract()
   const { disconnect } = useDisconnect();
   const [show, setShow] = React.useState(false)
-  const { contractAddress, abi ,properties} = useStateContext()
+  const { contractAddress, abi, createPropertyFunction, isConfirming, isConfirmed } = useStateContext()
   const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState({
     price: "",
@@ -43,7 +43,7 @@ export default function Home() {
           ...form,
           address: address,
           price: parseUnits(form.price, 18),
-        },useWaitForTransactionReceipt)
+        })
         setIsLoading(false)
       } else {
         alert("Please provide valid image URL")
@@ -51,36 +51,13 @@ export default function Home() {
       }
     })
   }
-  const createPropertyFunction = async (form,useWaitForTransactionReceipt) => {
-    const {address,price,propertyTitle,category,images,propertyAddress,description }  = form 
-    try {
-      await writeContract({
-        address: contractAddress,
-        abi: abi,
-        functionName: 'listProperty',
-        args: [
-          address,
-          price,
-          propertyTitle,
-          category,
-          images,
-          propertyAddress,
-          description,
-        ]
-      })
-    } catch (e) {
-      console.log("contract call error",e)
-    }
-  }
-  const {isLoading:isConfirming,isSuccess,isConfirmed} = useWaitForTransactionReceipt({hash})
+  useEffect(() => { 
+    console.log(properties, 666);
+  },[properties])
   useEffect(() => {
     console.log(abiData.abi);
     setShow(isConnected || false)
   }, [])
-  useEffect(() => {
-    console.log(status);
-  }, [status])
-
   const handlerConnect = async (connector) => {
     await connect({ connector })
   }
@@ -118,12 +95,11 @@ export default function Home() {
           <input type='text' placeholder='description' onChange={(e) => handleFormFieldChange('description', e)} />
         </div>
         <div>
-          <button type='submit' style={{border:"1px solid black",padding:"5px"}} disabled={isLoading || isPending}>
-              {isPending ? 'Confirming...' : 'Mint'} 
+          <button type='submit' style={{ border: "1px solid black", padding: "5px" }} disabled={isConfirming}>
+            {isConfirming ? 'Confirming...' : 'Mint'}
           </button>
         </div>
       </form>
-      {hash && <div>Transaction Hash: {hash}</div>}
       {isConfirming && <div>Waiting for confirmation...</div>}
       {isConfirmed && <div>Transaction confirmed.</div>}
     </div>

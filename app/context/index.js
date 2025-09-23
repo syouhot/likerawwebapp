@@ -3,51 +3,169 @@ import React, { useEffect } from 'react'
 import abiData from '../utils/abi.json';
 import { useWriteContract, useAccount, useReadContract } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
+import { useWaitForTransactionReceipt } from 'wagmi';
+import {
+  useAllPropertiesFunction,
+  useHightestratedProduct,
+  useProductReviews,
+  useProperty,
+  useUserProperties,
+  useUserReviews,
+  useProperties,
+  usePropertyIndex,
+  useReviewsCounter
+} from "@/app/context/readHook"
+import { usePropertyListedEvent } from "@/app/context/eventHook"
 const contractAddress = "0x4bc4c0f18a185d9a540b0ed05d578c45d2eff5b7"
 const StateContext = React.createContext();
 const abi = abiData.abi;
 export function StateContextProvider({ children }) {
-  const { writeContract, status } = useWriteContract();
+  // const [contractStatus, setContractStatus] = React.useState();
+  const { writeContract, status, hash } = useWriteContract();
   const { address } = useAccount();
-  const createPropertyFunction = async () => {
+  //更新
+  const updatePropertyFunction = async (form) => {
+    const { address, productId, propertyTitle, category, images, propertyAddress, description } = form
     try {
-      const data = await writeContract({
+      await writeContract({
+        address: contractAddress,
+        abi: abi,
+        functionName: 'updateProperty',
+        args: [
+          address,
+          productId,
+          propertyTitle,
+          category,
+          images,
+          propertyAddress,
+          description,
+        ]
+      })
+    } catch (error) {
+      console.log("updatePropertyFunctionError", error);
+    }
+  }
+  //更新价格
+  const updatePriceFunction = async (form) => {
+    const { address, productId, price } = form
+    try {
+      await writeContract({
+        address: contractAddress,
+        abi: abi,
+        functionName: 'updatePrice',
+        args: [
+          address,
+          productId,
+          price
+        ]
+      })
+    } catch (error) {
+      console.log("updatePriceFunctionError", error);
+
+    }
+  }
+  //创建
+  const createPropertyFunction = async (form) => {
+    const { address, price, propertyTitle, category, images, propertyAddress, description } = form
+    try {
+      await writeContract({
         address: contractAddress,
         abi: abi,
         functionName: 'listProperty',
         args: [
           address,
+          price,
+          propertyTitle,
+          category,
+          images,
+          propertyAddress,
+          description,
         ]
       })
-      console.log("contract call success", data);
     } catch (e) {
-      console.log("contract call error", e);
+      console.log("createPropertyFunction call error", e)
     }
   }
-  const { data: properties } = useReadContract({
-    address: contractAddress,
-    abi: abi,
-    functionName: 'getAllProperties',
-  });
-  // const getPropertiesData = (properties) => {
-  //   const parsedProperties = properties.map((property) => ({
-  //     owner: property.owner,
-  //     price: formatUnits(property.price, 18).toString(),
-  //     propertyTitle: property.propertyTitle,
-  //     category: property.category,
-  //     images: property.images,
-  //     address: property.propertyAddress,
-  //     description: property.description,
-  //     reviewers: property.reviewers,
-  //     reviews: property.reviews,
-  //   }))
-  //   return parsedProperties;
-  // }
+  //购买
+  const buyPropertyFunction = async (form) => {
+    const { id } = form
+    try {
+      await writeContract({
+        address: contractAddress,
+        abi: abi,
+        functionName: 'buyProperty',
+        args: [
+          id,
+          address,
+        ]
+      })
+    } catch (e) {
+      console.log("buyPropertyFunction call error", e)
+    }
+  }
+  //添加评论
+  const addReviewFunction = async (form) => {
+    const { productId, rating, comment } = form
+    try {
+      await writeContract({
+        address: contractAddress,
+        abi: abi,
+        functionName: 'addReview',
+        args: [
+          productId,
+          rating,
+          comment,
+          address
+        ]
+      })
+    } catch (e) {
+      console.log("addReviewFunction call error", e)
+    }
+  }
+  //点赞评论
+  const likeReviewFunction = async (form) => {
+    const { productId, reviewIndex } = form
+    try {
+      await writeContract({
+        address: contractAddress,
+        abi: abi,
+        functionName: 'likeReview',
+        args: [
+          productId,
+          reviewIndex,
+          address
+        ]
+      })
+    } catch (e) {
+      console.log("likeReview call error", e)
+    }
+  }
+  const { isLoading: isConfirming, isSuccess, isConfirmed } = useWaitForTransactionReceipt({ hash })
   useEffect(() => {
-    console.log(properties, 666);
-  }, [properties])
+  }, [])
   return (
-    <StateContext.Provider value={{ contractAddress, abi, createPropertyFunction, properties }}>
+    <StateContext.Provider value={{
+      contractAddress,
+      abi,
+      createPropertyFunction,
+      updatePropertyFunction,
+      updatePriceFunction,
+      buyPropertyFunction,
+      addReviewFunction,
+      likeReviewFunction,
+      isConfirming,
+      isConfirmed,
+      useAllPropertiesFunction,
+      useHightestratedProduct,
+      useProductReviews,
+      useProperty,
+      useUserProperties,
+      useUserReviews,
+      useProperties,
+      usePropertyIndex,
+      useReviewsCounter,
+      usePropertyListedEvent
+    }}>
       {children}
     </StateContext.Provider>
   )
