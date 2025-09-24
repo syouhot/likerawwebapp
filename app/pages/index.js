@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 
 ///INTERNAL IMPORT
@@ -11,30 +12,23 @@ import {
   Collection,
   Footer,
   Copyright,
-} from "../PageComponents/Components";
+} from "@/app/PageComponents/Components";
 
 ///INTERNAL IMPORT
-import { useStateContext } from "../context";
-import { getTopCreators } from "../utils";
+import { useStateContext } from "@/app/context";
+import { getTopCreators } from "@/app/utils";
 
 const index = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState([]);
 
-  const { currentAccount, getPropertiesData } = useStateContext();
+  const { currentAccount, useAllPropertiesFunction } = useStateContext();
 
   //GET DATA
-  const fetchProperty = async () => {
-    setIsLoading(true);
-    const data = await getPropertiesData();
-
-    setProperties(data);
-    setIsLoading(false);
-  };
+  const {properties:data,isLoading} = useAllPropertiesFunction();
 
   useEffect(() => {
-    fetchProperty();
-  }, []);
+    if (data) setProperties(data);
+  }, [data]);
 
   //CATEGORIES
   const housing = [];
@@ -56,23 +50,21 @@ const index = () => {
         farmhouse.push(el);
       } else if (el.category === "Rental") {
         rental.push(el);
-      } else if (el.category === "Housing") {
+      } else if (el.category === "Housing"||el.category==="housing") {
         housing.push(el);
       }
     });
   }
-
-  // const creators = getTopCreators(properties);
-
+  const creators = getTopCreators(properties);
   return (
-    <div class="template-color-1 nft-body-connect">
+    <div className="template-color-1 nft-body-connect">
       <Header />
       <Banner />
 
       <Live properties={properties} />
       <Service />
       <Product properties={properties} />
-      {/* <TopSeller creators={creators} /> */}
+      <TopSeller creators={creators} />
 
       <Collection
         housing={housing?.length}

@@ -42,7 +42,6 @@ export default function Home() {
         await createPropertyFunction({
           ...form,
           address: address,
-          price: parseUnits(form.price, 18),
         })
         setIsLoading(false)
       } else {

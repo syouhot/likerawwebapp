@@ -16,6 +16,7 @@ export const useAllPropertiesFunction = () => {
       if (data) {
         setProperties(data || []);
       }
+      console.log(data,111);  
     }, [data])
     return { properties, isLoading };
   } catch (error) {
@@ -56,6 +57,7 @@ export const useProductReviews = (productId) => {
     });
     useEffect(() => {
       if (data) {
+        console.log(data,222);
         setReviews(data || []);
       }
     }, [data])
@@ -72,7 +74,7 @@ export const useProperty = (id) => {
       address: contractAddress,
       abi: abi,
       functionName: 'getProperty',
-      args: [id],
+      args: [id*1],
     });
   } catch (error) {
     console.error("getProperty Error:", error);
@@ -140,7 +142,7 @@ export const useReviewsCounter = () => {
     return { data, isLoading } = useReadContract({
       address: contractAddress,
       abi: abi,
-      functionName: 'useReviewsCounter',
+      functionName: 'reviewsCounter',
     });
   } catch (error) {
     console.error("propertyIndex Error:", error);

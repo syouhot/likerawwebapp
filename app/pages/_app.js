@@ -1,15 +1,15 @@
 import React from "react";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
 import "../styles/globals.css";
 
-import { StateContextProvider } from "../context";
+import { StateContextProvider } from "@/app/context";
 
 export default function App({ Component, pageProps }) {
   return (
     <>
       <StateContextProvider>
         <Component {...pageProps} />
-        <Toaster />
+        {/* <Toaster /> */}
       </StateContextProvider>
 
       <script src="/js/vendor/jquery.js"></script>

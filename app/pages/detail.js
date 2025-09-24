@@ -1,6 +1,6 @@
+"use client"
 import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 //INTERNAL IMPORT
 import { Header, Footer, Copyright } from "../PageComponents/Components";
@@ -20,6 +20,8 @@ import { Loader, GlobalLoder } from "../PageComponents/Components";
 import { useStateContext } from "../context";
 
 const detail = () => {
+  console.log(234);
+  
   const [property, setProperty] = useState();
   const [parsedReviews, setParsedReviews] = useState();
   const [properties, setProperties] = useState([]);

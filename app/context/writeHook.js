@@ -1,5 +1,6 @@
 
 import { useStateContext } from '@/app/context/index';
+import { parseUnits } from 'viem';
 //更新
 export const updatePropertyFunction = async (form, writeContract) => {
     const { contractAddress, abi } = useStateContext()
@@ -36,7 +37,7 @@ export const updatePriceFunction = async (form, writeContract) => {
             args: [
                 address,
                 productId,
-                price
+                parseUnits(price,18)
             ]
         })
     } catch (error) {
@@ -55,7 +56,7 @@ export const createPropertyFunction = async (form, writeContract) => {
             functionName: 'listProperty',
             args: [
                 address,
-                price,
+                parseUnits(price, 18),
                 propertyTitle,
                 category,
                 images,
@@ -71,16 +72,17 @@ export const createPropertyFunction = async (form, writeContract) => {
 //购买
 export const buyPropertyFunction = async (form, writeContract) => {
     const { contractAddress, abi } = useStateContext()
-    const { id } = form
+    const { productId,amount } = form
     try {
         await writeContract({
             address: contractAddress,
             abi: abi,
             functionName: 'buyProperty',
             args: [
-                id,
+                productId,
                 address,
-            ]
+            ],
+            value:parseUnits(amount,18)
         })
     } catch (e) {
         console.log("buyPropertyFunction call error", e)

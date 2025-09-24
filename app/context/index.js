@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from 'react'
 import abiData from '../utils/abi.json';
-import { useWriteContract, useAccount, useReadContract } from 'wagmi';
+import { useWriteContract, useAccount, useReadContract, useDisconnect, useConnect, useBalance } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import { useWaitForTransactionReceipt } from 'wagmi';
 import {
@@ -16,13 +16,20 @@ import {
   useReviewsCounter
 } from "@/app/context/readHook"
 import { usePropertyListedEvent } from "@/app/context/eventHook"
+
 const contractAddress = "0x4bc4c0f18a185d9a540b0ed05d578c45d2eff5b7"
 const StateContext = React.createContext();
 const abi = abiData.abi;
+
 export function StateContextProvider({ children }) {
-  // const [contractStatus, setContractStatus] = React.useState();
+  const [connector, setConnector] = React.useState(null);
   const { writeContract, status, hash } = useWriteContract();
+  const { disconnect } = useDisconnect();
   const { address } = useAccount();
+  const {data:userBalance} = useBalance({
+    address,
+  })
+  const { connectors, connect } = useConnect();
   //更新
   const updatePropertyFunction = async (form) => {
     const { address, productId, propertyTitle, category, images, propertyAddress, description } = form
@@ -142,9 +149,16 @@ export function StateContextProvider({ children }) {
   }
   const { isLoading: isConfirming, isSuccess, isConfirmed } = useWaitForTransactionReceipt({ hash })
   useEffect(() => {
-  }, [])
+    if (connectors) connectors.map((item) => {
+      if (item.type == "metaMask") setConnector(item)
+    })
+  }, [connectors])
+  useEffect(() => {
+    console.log(userBalance);
+  }, [userBalance])
   return (
     <StateContext.Provider value={{
+      address,
       contractAddress,
       abi,
       createPropertyFunction,
@@ -164,7 +178,11 @@ export function StateContextProvider({ children }) {
       useProperties,
       usePropertyIndex,
       useReviewsCounter,
-      usePropertyListedEvent
+      usePropertyListedEvent,
+      disconnect,
+      connect,
+      connector,
+      userBalance
     }}>
       {children}
     </StateContext.Provider>
