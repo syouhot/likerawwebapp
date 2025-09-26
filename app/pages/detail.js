@@ -38,8 +38,6 @@ const detail = ({searchParams }) => {
     loader,
     address,
     useAddReviewFunction,
-    isConfirming,
-    isConfirmed,
     status
   } = useStateContext();
 
