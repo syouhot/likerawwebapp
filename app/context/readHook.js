@@ -20,7 +20,7 @@ export const useAllPropertiesFunction = () => {
 //获取高收藏的
 export const useHightestratedProduct = () => {
   const { contractAddress, abi } = useStateContext()
-  const [property, setProperty] = useState(null);
+  const [high, setHigh] = useState(null);
   try {
     const { data, isLoading } = useReadContract({
       address: contractAddress,
@@ -29,10 +29,10 @@ export const useHightestratedProduct = () => {
     });
     useEffect(() => {
       if (data) {
-        setProperty(data || null);
+        setHigh(data || null);
       }
     }, [data])
-    return { property, isLoading };
+    return { high, isLoading };
   } catch (error) {
     console.error("useHightestratedProduct Error:", error);
   }
@@ -89,10 +89,10 @@ export const useProperty = (id) => {
   }
 }
 //获取用户房产
-export const useUserProperties = (address) => {
-  const { contractAddress, abi } = useStateContext()
+export const useUserProperties = () => {
+  const { contractAddress, abi,address } = useStateContext()
   try {
-    return { data, isLoading } = useReadContract({
+    return useReadContract({
       address: contractAddress,
       abi: abi,
       functionName: 'getUserProperties',
@@ -103,8 +103,8 @@ export const useUserProperties = (address) => {
   }
 }
 //获取用户评论
-export const useUserReviews = (address) => {
-  const { contractAddress, abi } = useStateContext()
+export const useUserReviews = () => {
+  const { contractAddress, abi,address } = useStateContext()
   try {
     return { data, isLoading } = useReadContract({
       address: contractAddress,
@@ -147,7 +147,7 @@ export const usePropertyIndex = () => {
 export const useReviewsCounter = () => {
   const { contractAddress, abi } = useStateContext()
   try {
-    return { data, isLoading } = useReadContract({
+    return useReadContract({
       address: contractAddress,
       abi: abi,
       functionName: 'reviewsCounter',

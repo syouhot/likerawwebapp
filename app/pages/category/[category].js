@@ -1,5 +1,5 @@
+"use client"
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 ///INTERNAL IMPORT
 import { Title, Collection } from "../../PageComponents/CollectionPage";
@@ -8,29 +8,19 @@ import { Header, Footer, Copyright } from "../../PageComponents/Components";
 //INTERNAL IMPORT
 import { useStateContext } from "../../context";
 
-const collection = () => {
-  const router = useRouter();
-
-  const { query } = router;
-
-  console.log(router);
-
-  const [isLoading, setIsLoading] = useState(false);
+const collection = ({searchParams}) => {
+    const { name } = React.use(searchParams);
+  const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
 
-  const { address, contract, getPropertiesData } = useStateContext();
-
+  const { address, contract, useAllPropertiesFunction } = useStateContext();
+  
+  const { data: propertiesData } = useAllPropertiesFunction();
   //GET DATA
-  const fetchProperty = async () => {
-    setIsLoading(true);
-    const data = await getPropertiesData();
-    setProperties(data);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
-    fetchProperty();
-  }, []);
+    setProperties(propertiesData);
+    if(propertiesData) setIsLoading(false);
+  }, [propertiesData]);
 
   //CATEGORIES
 
@@ -38,7 +28,7 @@ const collection = () => {
 
   if (!isLoading) {
     properties?.map((el) => {
-      if (el.category === query.name) {
+      if (el.category === name.toLowerCase()) {
         category.push(el);
       }
     });
@@ -47,9 +37,9 @@ const collection = () => {
   console.log(category);
 
   return (
-    <div class="template-color-1 nft-body-connect">
+    <div className="template-color-1 nft-body-connect">
       <Header />
-      <Title title={query.name} />
+      <Title title={name} />
       <Collection category={category} isLoading={isLoading} />
       <Footer />
       <Copyright />

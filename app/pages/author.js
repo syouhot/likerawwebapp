@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 
 //INTERNAL IMPORT
@@ -13,32 +14,27 @@ import { Header, Footer, Copyright } from "../PageComponents/Components";
 import { useStateContext } from "../context";
 
 const author = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
   const [author, setAuthor] = useState([]);
 
-  const { currentAccount, getUserPropertiesFunction, getPropertiesData } =
+  const { address, useUserProperties, useAllPropertiesFunction } =
     useStateContext();
 
+  const {data:propertiesData} = useAllPropertiesFunction();
+  const {data:authorData} = useUserProperties();
   //GET DATA
-  const fetchProperty = async () => {
-    setIsLoading(true);
-    const data = await getPropertiesData();
-    const dataAuthor = await getUserPropertiesFunction();
-    setAuthor(dataAuthor);
-    setProperties(data);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
-    fetchProperty();
-  }, []);
+    setProperties(propertiesData);
+    setAuthor(authorData);
+    if(propertiesData&&authorData) setIsLoading(false);
+  }, [propertiesData,authorData]);
 
   return (
-    <div class="template-color-1 nft-body-connect">
+    <div className="template-color-1 nft-body-connect">
       <Header />
       <AuthorOne />
-      <AuthorTwo address={currentAccount} author={author} />
+      <AuthorTwo address={address} author={author} />
       <AuthorThree properties={properties} author={author} />
       <AuthorFour />
       <AuthorFive />

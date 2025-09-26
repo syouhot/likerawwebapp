@@ -1,38 +1,35 @@
+"use client"
 import React, { useEffect, useState } from "react";
 
 //INTERNAL IMPORT
 import { Activity } from "../PageComponents/ActivityPage";
 import { Header, Footer, Copyright } from "../PageComponents/Components";
 import { useStateContext } from "../context";
+import { set } from "@/public/js/vendor/js.cookie";
 const active = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
   const [totalReviews, setTotalReviews] = useState();
 
-  const { getPropertiesData, totalReviewsFunction, getHighestRatedProduct } =
+  const { useAllPropertiesFunction, useReviewsCounter, useHightestratedProduct } =
     useStateContext();
-
+  const { data: propertiesData } = useAllPropertiesFunction();
+  const {data:totalReviewsData } = useReviewsCounter();
   //GET DATA
-  const fetchProperty = async () => {
-    setIsLoading(true);
-    const data = await getPropertiesData();
-    const reviewsLength = await totalReviewsFunction();
-    setTotalReviews(reviewsLength);
-    setProperties(data);
-    setIsLoading(false);
-  };
 
   useEffect(() => {
-    fetchProperty();
-  }, []);
+    setProperties(propertiesData);
+    setTotalReviews(totalReviewsData);
+    if(propertiesData) setIsLoading(false);
+  }, [propertiesData, totalReviewsData]);
 
   return (
-    <div class="template-color-1 nft-body-connect">
+    <div className="template-color-1 nft-body-connect">
       <Header />
       <Activity
         properties={properties}
         totalReviews={totalReviews}
-        popular={getHighestRatedProduct}
+        popular={useHightestratedProduct}
       />
       <Footer />
       <Copyright />

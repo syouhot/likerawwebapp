@@ -39,8 +39,8 @@ const Product =({ properties }) => {
           </div>
         </div>
         <div className="col-lg-12">
-          <div className="grid-metro5 mesonry-list">
-            <div className="resizer"></div>
+          <div className="grid-metro5 mesonry-list" style={{ display: 'flex', flexWrap: 'wrap'}}>
+            {/* <div className="resizer"></div> */}
 
             <div className="grid-metro-item cat--1 cat--3">
               <div className="product-style-one no-overlay with-placeBid">
