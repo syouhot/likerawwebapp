@@ -1,80 +1,86 @@
 import React from "react";
 import Link from "next/link";
+import { formatUnits } from "viem";
 
 const DetailThree = ({ properties }) => {
   return (
-    <div class="rn-new-items rn-section-gapTop">
-      <div class="container">
-        <div class="row mb--30 align-items-center">
-          <div class="col-12">
+    <div className="rn-new-items rn-section-gapTop">
+      <div className="container">
+        <div className="row mb--30 align-items-center">
+          <div className="col-12">
             <h3
-              class="title mb--0"
-              data-sal-delay="150"
-              data-sal="slide-up"
-              data-sal-duration="800"
+              className="title mb--0"
             >
               Recent View
             </h3>
+            {/* <h3
+              className="title mb--0"
+              dataSalDelay="150"
+              dataSal="slide-up"
+              dataSalDuration="800"
+            >
+              Recent View
+            </h3> */}
           </div>
         </div>
-        <div class="row g-5">
-          {properties.map((property, i) => (
+        <div className="row g-5">
+          {properties?.map((property, i) => (
             <div
               key={i + 1}
-              data-sal=""
-              data-sal-delay="150"
-              data-sal-duration="800"
-              class="col-5 col-lg-4 col-md-6 col-sm-6 col-12"
+              className="col-5 col-lg-4 col-md-6 col-sm-6 col-12"
             >
-              <a href={`/detail?property=${property.productID}`}>
-                <div class="product-style-one no-overlay">
-                  <div class="card-thumbnail">
-                    <a>
-                      <img src={property.image} alt="NFT_portfolio" />
-                    </a>
+            {/* <div
+              key={i + 1}
+              dataSal=""
+              dataSalDelay="150"
+              dataSalDuration="800"
+              className="col-5 col-lg-4 col-md-6 col-sm-6 col-12"
+            > */}
+              <a href={`/detail?property=${property?.productID}`}>
+                <div className="product-style-one no-overlay">
+                  <div className="card-thumbnail">
+                      <img src={property?.images || null} alt="NFT_portfolio" />
                   </div>
-                  <div class="product-share-wrapper">
-                    <div class="profile-share">
+                  <div className="product-share-wrapper">
+                    <div className="profile-share">
                       {property.reviewers.map((el, i) => (
-                        <a class="avatar" data-tooltip={`${el.slice(0, 15)}..`}>
+                        <a className="avatar" data-tooltip={`${el.slice(0, 15)}..`} key={i}>
                           <img
                             src={`/client/client-${i + 1}.png`}
-                            alt="Nft_Profile"
+                          alt="Nft_Profile"
                           />
                         </a>
                       ))}
                       {property.reviewers.length !== 0 && (
-                        <a class="more-author-text" href="#">
+                        <span className="more-author-text" href="#">
                           Interested Users
-                        </a>
+                        </span>
                       )}
                     </div>
                   </div>
-                  <a href="#">
-                    <span class="product-name">
-                      {property.title.length >= 25
+                    <span className="product-name">
+                      {property?.title?.length >= 25
                         ? `${property.title.slice(0, 22)}...`
                         : property.title}
                     </span>
-                  </a>
-                  <span class="latest-bid">Category: {property.category}</span>
-                  <div class="bid-react-area">
-                    <div class="last-bid">{property.price} POL</div>
-                    <div class="react-area">
+                  <span className="latest-bid">Category: {property.category}</span>
+                  <div className="bid-react-area">
+                    <div className="last-bid">{formatUnits(property.price,18)} POL</div>
+                    <div className="react-area">
                       <svg
                         viewBox="0 0 17 16"
                         fill="none"
                         width="16"
                         height="16"
-                        class="sc-bdnxRM sc-hKFxyN kBvkOu"
+                        className="sc-bdnxRM sc-hKFxyN kBvkOu"
                       >
                         <path
                           d="M8.2112 14L12.1056 9.69231L14.1853 7.39185C15.2497 6.21455 15.3683 4.46116 14.4723 3.15121V3.15121C13.3207 1.46757 10.9637 1.15351 9.41139 2.47685L8.2112 3.5L6.95566 2.42966C5.40738 1.10976 3.06841 1.3603 1.83482 2.97819V2.97819C0.777858 4.36443 0.885104 6.31329 2.08779 7.57518L8.2112 14Z"
                           stroke="currentColor"
-                          stroke-width="2"
+                          strokeWidth="2"
                         ></path>
                       </svg>
-                      <span class="number">{property.reviewers.length}</span>
+                      <span className="number">{property.reviewers.length}</span>
                     </div>
                   </div>
                 </div>

@@ -40,13 +40,13 @@ const Live = ({ properties }) => {
                 >
                   <div className="card-thumbnail">
                     <a href={`/detail?property=${property.productID}`}>
-                      <img src={property.images} alt="NFT_portfolio" />
+                      <img src={property?.images||null} alt="NFT_portfolio" />
                     </a>
                   </div>
                   <div className="product-share-wrapper">
                     <div className="profile-share">
                       {property.reviewers.map((el, i) => (
-                        <a className="avatar" data-tooltip={`${el.slice(0, 15)}..`}>
+                        <a className="avatar" data-tooltip={`${el.slice(0, 15)}..`} key={i}>
                           <img
                             src={`/client/client-${i + 1}.png`}
                             alt="Nft_Profile"

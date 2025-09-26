@@ -24,7 +24,7 @@ const index = () => {
   const { currentAccount, useAllPropertiesFunction } = useStateContext();
 
   //GET DATA
-  const {properties:data,isLoading} = useAllPropertiesFunction();
+  const {data,isLoading} = useAllPropertiesFunction();
 
   useEffect(() => {
     if (data) setProperties(data);

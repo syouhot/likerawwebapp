@@ -1,7 +1,5 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
 //INTERNAL IMPORT
 import { Header, Footer, Copyright } from "../PageComponents/Components";
 import {
@@ -18,10 +16,9 @@ import {
 import { Loader, GlobalLoder } from "../PageComponents/Components";
 
 import { useStateContext } from "../context";
+import { formatUnits } from "viem";
 
-const detail = () => {
-  console.log(234);
-  
+const detail = ({searchParams }) => {
   const [property, setProperty] = useState();
   const [parsedReviews, setParsedReviews] = useState();
   const [properties, setProperties] = useState([]);
@@ -31,35 +28,41 @@ const detail = () => {
   const [buyLoading, setBuyLoading] = useState(false);
 
   const {
-    currentAccount,
-    addReviewFunction,
-    getProductReviewsFunction,
-    likeReviewFunction,
+    useProductReviews,
+    useLikeReviewFunction,
     buyPropertyFunction,
-    getPropertyFunction,
-    getPropertiesData,
-    updatePriceFunction,
+    useProperty,
+    useAllPropertiesFunction,
+    useUpdatePriceFunction,
+    writeContract,
     loader,
+    address,
+    useAddReviewFunction,
+    isConfirming,
+    isConfirmed
   } = useStateContext();
 
-  const router = useRouter();
-  const { query } = router;
-
+  const {property:propertyId} = React.use(searchParams);
+  const { data } = useProperty(propertyId);
+  const { data: dataReviews } = useProductReviews(propertyId);
+  const { data: dataProperties } = useAllPropertiesFunction();
+  const addReview = useAddReviewFunction()
+  const likeReview = useLikeReviewFunction()
+  const updatePrice = useUpdatePriceFunction()
+  
+  useEffect(() => { 
+    setUpdatePriceLoading(isConfirming?true:false)
+    setCommentLoading(isConfirming?true:false)
+  },[isConfirming])
   //GET PROPERTY DATA
-  const fetchProperty = async () => {
-    const data = await getPropertyFunction(query.property);
-    const dataReviews = await getProductReviewsFunction(query.property);
-    const dataProperties = await getPropertiesData();
+  useEffect(() => {
     setProperties(dataProperties);
     setProperty(data);
-    setParsedReviews(dataReviews);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    if (query) fetchProperty();
-  }, [query]);
-
+    setParsedReviews(dataReviews); 
+  }, [data,dataReviews,dataProperties]);
+  useEffect(() => { 
+    if (propertyId) setIsLoading(false);
+  }, [propertyId])
   //ADD REVIEW
   const [review, setReview] = useState({
     productID: "",
@@ -72,12 +75,10 @@ const detail = () => {
   };
 
   const createReview = async () => {
-    setCommentLoading(true);
-    const data = await addReviewFunction({
+    const data = await addReview({
       ...review,
-      productID: property.productID,
+      productID: Number(formatUnits(property?.productID,0))
     });
-    setCommentLoading(false);
   };
 
   //LIKE REVIEW
@@ -86,7 +87,7 @@ const detail = () => {
     reviewIndex: "",
   });
   const likeReviewCall = async (property, reviewIndex) => {
-    const data = await likeReviewFunction(property.productID, reviewIndex);
+    const data = await likeReview({ productID: Number(formatUnits(property?.productID, 0)), reviewIndex});
   };
 
   //BUY PROPERTY
@@ -102,21 +103,21 @@ const detail = () => {
 
   //UPDATE PRICE
   const [updatePropertyPrice, setUpdatePropertyPrice] = useState({
-    productID: property?.productID,
+    address,
+    productID: propertyId,
     price: "",
   });
   const updatepropertyPrice = async () => {
     setUpdatePriceLoading(true);
-    const data = await updatePriceFunction({
-      ...updatePropertyPrice,
-      productID: property?.productID,
+    const data = await updatePrice({
+      ...updatePropertyPrice
     });
-    setUpdatePriceLoading(false);
-    window.location.reload();
+    // setUpdatePriceLoading(false);
+    // window.location.reload();
   };
   //
   return (
-    <div class="template-color-1 nft-body-connect">
+    <div className="template-color-1 nft-body-connect">
       <Header />
       <DetailOne />
 
@@ -126,7 +127,7 @@ const detail = () => {
         setLikeReviews={setLikeReviews}
         likeReviewCall={likeReviewCall}
         buyingProperty={buyingProperty}
-        address={currentAccount}
+        address={address}
         isLoading={isLoading}
         buyLoading={buyLoading}
       />
@@ -138,6 +139,7 @@ const detail = () => {
         property={property}
         setUpdatePropertyPrice={setUpdatePropertyPrice}
         updatepropertyPrice={updatepropertyPrice}
+        updatePropertyPrice={updatePropertyPrice}
         updatePriceLoading={updatePriceLoading}
       />
       <DetailEight

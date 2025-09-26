@@ -1,24 +1,17 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useReadContract } from 'wagmi'; // 假设使用了 wagmi 或其他类似的库
 import { useStateContext } from '@/app/context/index';
+import { formatUnits } from 'viem';
 //点赞评论
 export const useAllPropertiesFunction = () => {
   const { contractAddress, abi } = useStateContext()
-  const [properties, setProperties] = useState([]);
   try {
-    const { data, isLoading } = useReadContract({
+    return useReadContract({
       address: contractAddress,
       abi: abi,
       functionName: 'getAllProperties',
     });
-    useEffect(() => {
-      if (data) {
-        setProperties(data || []);
-      }
-      console.log(data,111);  
-    }, [data])
-    return { properties, isLoading };
   } catch (error) {
     console.error("useReadContract Error:", error);
   }
@@ -47,21 +40,20 @@ export const useHightestratedProduct = () => {
 //获取评论
 export const useProductReviews = (productId) => {
   const { contractAddress, abi } = useStateContext()
-  const [reviews, setReviews] = useState([]);
+  const [data, setData] = useState([]);
   try {
-    const { data, isLoading } = useReadContract({
+    const { data:reviews, isLoading } = useReadContract({
       address: contractAddress,
       abi: abi,
       functionName: 'getProductReviews',
-      args: [productId],
+      args: [productId*1],
     });
     useEffect(() => {
-      if (data) {
-        console.log(data,222);
-        setReviews(data || []);
+      if (reviews) {
+        setData(reviews || []);
       }
-    }, [data])
-    return { reviews, isLoading };
+    }, [reviews])
+    return { data, isLoading };
   } catch (error) {
     console.error("useProductReviews Error:", error);
   }
@@ -69,13 +61,29 @@ export const useProductReviews = (productId) => {
 //获取房产
 export const useProperty = (id) => {
   const { contractAddress, abi } = useStateContext()
+  const [data, setData] = useState(null);
   try {
-    return { data, isLoading } = useReadContract({
+    const { data:entity, isLoading } = useReadContract({
       address: contractAddress,
       abi: abi,
       functionName: 'getProperty',
       args: [id*1],
     });
+    useEffect(() => { 
+      if (entity) {
+        setData({
+          productID:entity[0],
+          owner: entity[1],
+          price: formatUnits(entity[2],18),
+          propertyName: entity[3],
+          category: entity[4],
+          images: entity[5],
+          propertyAddress: entity[6],
+          description: entity[7],
+        } || null);
+      }
+    },[entity])
+    return {data,isLoading }
   } catch (error) {
     console.error("getProperty Error:", error);
   }
