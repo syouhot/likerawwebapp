@@ -43,7 +43,7 @@ const Product =({ properties }) => {
             {/* <div className="resizer"></div> */}
 
             <div className="grid-metro-item cat--1 cat--3">
-              <div className="product-style-one no-overlay with-placeBid">
+              <div className="product-style-one no-overlay with-placeBid" style={{position: 'relative'}}>
                 <div className="card-thumbnail">
                   <a href="product-details.html">
                     <img
@@ -151,7 +151,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat-3 cat--4">
+            <div className="grid-metro-item cat-3 cat--4" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -260,7 +260,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--5 cat--6">
+            <div className="grid-metro-item cat--5 cat--6" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -369,7 +369,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--1 cat--2">
+            <div className="grid-metro-item cat--1 cat--2" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -478,7 +478,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--1 cat--2">
+            <div className="grid-metro-item cat--1 cat--2" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -587,7 +587,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--1 cat--2">
+            <div className="grid-metro-item cat--1 cat--2" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -696,7 +696,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--5 cat--4">
+            <div className="grid-metro-item cat--5 cat--4" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -805,7 +805,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--5 cat--6">
+            <div className="grid-metro-item cat--5 cat--6" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -914,7 +914,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat--1 cat--3">
+            <div className="grid-metro-item cat--1 cat--3" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">
@@ -1023,7 +1023,7 @@ const Product =({ properties }) => {
               </div>
             </div>
 
-            <div className="grid-metro-item cat-3 cat--4">
+            <div className="grid-metro-item cat-3 cat--4" style={{position: 'relative'}}>
               <div className="product-style-one no-overlay with-placeBid">
                 <div className="card-thumbnail">
                   <a href="product-details.html">

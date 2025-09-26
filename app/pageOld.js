@@ -14,10 +14,9 @@ export default function Home() {
   const { properties } = useAllPropertiesFunction()
   const { address, isConnected } = useAccount()
   const { connectors, connect } = useConnect();
-  // const { data: hash, writeContract, status, isPending } = useWriteContract()
   const { disconnect } = useDisconnect();
   const [show, setShow] = React.useState(false)
-  const { contractAddress, abi, createPropertyFunction, isConfirming, isConfirmed } = useStateContext()
+  const { contractAddress, abi, createPropertyFunction, status } = useStateContext()
   const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState({
     price: "",
@@ -50,9 +49,6 @@ export default function Home() {
       }
     })
   }
-  useEffect(() => { 
-    console.log(properties, 666);
-  },[properties])
   useEffect(() => {
     console.log(abiData.abi);
     setShow(isConnected || false)
@@ -94,13 +90,11 @@ export default function Home() {
           <input type='text' placeholder='description' onChange={(e) => handleFormFieldChange('description', e)} />
         </div>
         <div>
-          <button type='submit' style={{ border: "1px solid black", padding: "5px" }} disabled={isConfirming}>
-            {isConfirming ? 'Confirming...' : 'Mint'}
+          <button type='submit' style={{ border: "1px solid black", padding: "5px" }} disabled={status=="pending"}>
+            {status == "pending" ? 'Confirming...' : 'Mint'}
           </button>
         </div>
       </form>
-      {isConfirming && <div>Waiting for confirmation...</div>}
-      {isConfirmed && <div>Transaction confirmed.</div>}
     </div>
   );
 }

@@ -33,7 +33,7 @@ const CreateTwo = () => {
     setLoader,
     notifySuccess,
     notifyError,
-    isConfirming
+    status
   } = useStateContext();
   const createProperty = createPropertyFunction()
   const [form, setForm] = useState({
@@ -49,8 +49,8 @@ const CreateTwo = () => {
     setForm({ ...form, [fileName]: e.target.value });
   };
   useEffect(() => { 
-    setIsLoading(isConfirming ? true : false)
-  },[isConfirming])
+    setIsLoading(status == "pending" ? true : false)
+  },[status])
   //NEW
   const handleSubmit = async () => {
     setIsLoading(true);

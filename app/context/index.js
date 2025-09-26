@@ -162,7 +162,6 @@ export function StateContextProvider({ children }) {
     })
   }, [connectors])
   useEffect(() => {
-    console.log(hash, 555);
     if (isConfirmed) {
       let timer = setTimeout(() => {
         clearTimeout(timer)
@@ -181,8 +180,6 @@ export function StateContextProvider({ children }) {
       useAddReviewFunction,
       buyPropertyFunction,
       useLikeReviewFunction,
-      isConfirming,
-      isConfirmed,
       useAllPropertiesFunction,
       useHightestratedProduct,
       useProductReviews,
@@ -198,6 +195,7 @@ export function StateContextProvider({ children }) {
       connector,
       userBalance,
       writeContract,
+      status
     }}>
       {children}
     </StateContext.Provider>

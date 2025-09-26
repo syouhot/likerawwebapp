@@ -39,7 +39,8 @@ const detail = ({searchParams }) => {
     address,
     useAddReviewFunction,
     isConfirming,
-    isConfirmed
+    isConfirmed,
+    status
   } = useStateContext();
 
   const {property:propertyId} = React.use(searchParams);
@@ -49,11 +50,13 @@ const detail = ({searchParams }) => {
   const addReview = useAddReviewFunction()
   const likeReview = useLikeReviewFunction()
   const updatePrice = useUpdatePriceFunction()
+  const buyProperty = buyPropertyFunction()
   
   useEffect(() => { 
-    setUpdatePriceLoading(isConfirming?true:false)
-    setCommentLoading(isConfirming?true:false)
-  },[isConfirming])
+    setUpdatePriceLoading(status =="pending"?true:false)
+    setCommentLoading(status == "pending" ?true:false)
+    setBuyLoading(status == "pending" ?true:false)
+  }, [status])
   //GET PROPERTY DATA
   useEffect(() => {
     setProperties(dataProperties);
@@ -97,8 +100,13 @@ const detail = ({searchParams }) => {
   };
   const buyingProperty = async () => {
     setBuyLoading(true);
-    const data = await buyPropertyFunction(buying);
-    setBuyLoading(false);
+    try {
+      const data = await buyProperty(buying);
+      
+    } catch (e) {
+      console.log(111,e);
+      
+    }
   };
 
   //UPDATE PRICE
